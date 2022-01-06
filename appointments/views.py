@@ -122,3 +122,27 @@ def manage_working_days(request):
         form = ManageHolidayForm()
         context = {'doctors': doctors, 'form': form}
     return render(request, 'appointments/manage-working-days.html', context)
+
+
+
+@allowed_users(allowed_roles=['ministry'])
+def analytics(request):
+    current_date = datetime.datetime.now()
+    appointments = Appointment.objects.filter(status = True)
+    datetime.timedelta(days=14)
+    today_vaccinated = appointments.filter(vaccinated_date__day = current_date.day)
+    monthly_vaccinated = appointments.filter(vaccinated_date__month = current_date.month)
+    yearly_vaccinated = appointments.filter(vaccinated_date__year = current_date.year)
+    previous_today_vaccinated = appointments.filter(vaccinated_date__day = current_date.day-1)
+    previous_monthly_vaccinated = appointments.filter(vaccinated_date__month = current_date.month-1)
+    previous_yearly_vaccinated = appointments.filter(vaccinated_date__year = current_date.year-1)
+    context = {
+        'today_vaccinated': today_vaccinated,
+        'monthly_vaccinated': monthly_vaccinated,
+        'yearly_vaccinated': yearly_vaccinated,
+        'previous_today_vaccinated': previous_today_vaccinated,
+        'previous_monthly_vaccinated': previous_monthly_vaccinated,
+        'previous_yearly_vaccinated': previous_yearly_vaccinated,
+    }
+    return render(request, 'appointments/ministry-of-health.html', context)
+
