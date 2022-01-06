@@ -37,3 +37,6 @@ def contact(request):
     return render(request, 'authentication/contact.html')
 
 
+
+def contact_home(request):
+    return render(request, 'authentication/home_vaccine.html')
